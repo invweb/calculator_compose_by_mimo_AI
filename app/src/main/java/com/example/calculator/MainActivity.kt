@@ -15,11 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.enableEdgeToEdge
 import com.example.calculator.ui.theme.CalculatorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             CalculatorTheme {
                 Surface(
@@ -97,6 +99,7 @@ fun CalculatorScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1C1C1E))
+            .systemBarsPadding()
             .padding(16.dp),
         verticalArrangement = Arrangement.Bottom
     ) {
