@@ -3,6 +3,7 @@ package com.example.calculator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.activity.enableEdgeToEdge
 import com.example.calculator.ui.theme.CalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +44,9 @@ fun CalculatorScreen() {
     var firstOperand by remember { mutableDoubleStateOf(0.0) }
     var operation by remember { mutableStateOf("") }
     var isNewInput by remember { mutableStateOf(true) }
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     fun onDigit(digit: String) {
         display = if (isNewInput) {
@@ -81,10 +87,6 @@ fun CalculatorScreen() {
         isNewInput = true
     }
 
-    fun onBackspace() {
-        display = if (display.length > 1) display.dropLast(1) else "0"
-    }
-
     fun onPercent() {
         val value = display.toDoubleOrNull() ?: 0.0
         display = (value / 100).toString()
@@ -95,111 +97,236 @@ fun CalculatorScreen() {
         display = (-value).toString()
     }
 
+    if (isLandscape) {
+        LandscapeCalculator(
+            display = display,
+            operation = operation,
+            onDigit = ::onDigit,
+            onOperation = ::onOperation,
+            onEquals = ::onEquals,
+            onClear = ::onClear,
+            onPercent = ::onPercent,
+            onPlusMinus = ::onPlusMinus
+        )
+    } else {
+        PortraitCalculator(
+            display = display,
+            operation = operation,
+            onDigit = ::onDigit,
+            onOperation = ::onOperation,
+            onEquals = ::onEquals,
+            onClear = ::onClear,
+            onPercent = ::onPercent,
+            onPlusMinus = ::onPlusMinus
+        )
+    }
+}
+
+@Composable
+private fun PortraitCalculator(
+    display: String,
+    operation: String,
+    onDigit: (String) -> Unit,
+    onOperation: (String) -> Unit,
+    onEquals: () -> Unit,
+    onClear: () -> Unit,
+    onPercent: () -> Unit,
+    onPlusMinus: () -> Unit
+) {
+    val buttonSpacing = 10.dp
+    val cornerRadius = 24.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1C1C1E))
             .systemBarsPadding()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Bottom
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Text(
             text = operation.ifEmpty { " " },
             color = Color.Gray,
-            fontSize = 24.sp,
+            fontSize = 22.sp,
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                .padding(bottom = 4.dp)
         )
 
         Text(
             text = display,
             color = Color.White,
-            fontSize = 64.sp,
+            fontSize = 56.sp,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 24.dp),
+                .padding(bottom = 12.dp),
             maxLines = 1
         )
 
-        val buttonSpacing = 12.dp
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
-            CalculatorButton("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f)) { onClear() }
-            CalculatorButton("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f)) { onPlusMinus() }
-            CalculatorButton("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f)) { onPercent() }
-            CalculatorButton("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f)) { onOperation("÷") }
-        }
+            ButtonRow(buttonSpacing) {
+                CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onClear() }
+                CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onPlusMinus() }
+                CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onPercent() }
+                CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("÷") }
+            }
 
-        Spacer(modifier = Modifier.height(buttonSpacing))
+            ButtonRow(buttonSpacing) {
+                CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("7") }
+                CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("8") }
+                CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("9") }
+                CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("×") }
+            }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-        ) {
-            CalculatorButton("7", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("7") }
-            CalculatorButton("8", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("8") }
-            CalculatorButton("9", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("9") }
-            CalculatorButton("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f)) { onOperation("×") }
-        }
+            ButtonRow(buttonSpacing) {
+                CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("4") }
+                CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("5") }
+                CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("6") }
+                CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("-") }
+            }
 
-        Spacer(modifier = Modifier.height(buttonSpacing))
+            ButtonRow(buttonSpacing) {
+                CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("1") }
+                CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("2") }
+                CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("3") }
+                CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("+") }
+            }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-        ) {
-            CalculatorButton("4", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("4") }
-            CalculatorButton("5", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("5") }
-            CalculatorButton("6", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("6") }
-            CalculatorButton("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f)) { onOperation("-") }
-        }
-
-        Spacer(modifier = Modifier.height(buttonSpacing))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-        ) {
-            CalculatorButton("1", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("1") }
-            CalculatorButton("2", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("2") }
-            CalculatorButton("3", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit("3") }
-            CalculatorButton("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f)) { onOperation("+") }
-        }
-
-        Spacer(modifier = Modifier.height(buttonSpacing))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-        ) {
-            CalculatorButton("0", Color(0xFF333333), Color.White, Modifier.weight(2f)) { onDigit("0") }
-            CalculatorButton(",", Color(0xFF333333), Color.White, Modifier.weight(1f)) { onDigit(".") }
-            CalculatorButton("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f)) { onEquals() }
+            ButtonRow(buttonSpacing) {
+                CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f), cornerRadius) { onDigit("0") }
+                CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit(".") }
+                CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onEquals() }
+            }
         }
     }
 }
 
 @Composable
-fun CalculatorButton(
+private fun LandscapeCalculator(
+    display: String,
+    operation: String,
+    onDigit: (String) -> Unit,
+    onOperation: (String) -> Unit,
+    onEquals: () -> Unit,
+    onClear: () -> Unit,
+    onPercent: () -> Unit,
+    onPlusMinus: () -> Unit
+) {
+    val buttonSpacing = 8.dp
+    val cornerRadius = 20.dp
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1C1C1E))
+            .systemBarsPadding()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+        ) {
+            Text(
+                text = operation.ifEmpty { " " },
+                color = Color.Gray,
+                fontSize = 18.sp,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 2.dp)
+            )
+            Text(
+                text = display,
+                color = Color.White,
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Light,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                maxLines = 1
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(buttonSpacing)
+            ) {
+                ButtonRow(buttonSpacing) {
+                    CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onClear() }
+                    CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onPlusMinus() }
+                    CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onPercent() }
+                }
+                ButtonRow(buttonSpacing) {
+                    CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("7") }
+                    CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("8") }
+                    CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("9") }
+                }
+                ButtonRow(buttonSpacing) {
+                    CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("4") }
+                    CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("5") }
+                    CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("6") }
+                }
+                ButtonRow(buttonSpacing) {
+                    CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("1") }
+                    CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("2") }
+                    CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("3") }
+                }
+                ButtonRow(buttonSpacing) {
+                    CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f), cornerRadius, 18.sp) { onDigit("0") }
+                    CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit(".") }
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .width(72.dp)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(buttonSpacing)
+        ) {
+            CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("÷") }
+            CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("×") }
+            CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("-") }
+            CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("+") }
+            CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onEquals() }
+        }
+    }
+}
+
+@Composable
+private fun ButtonRow(spacing: Dp, content: @Composable RowScope.() -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(spacing),
+        content = content
+    )
+}
+
+@Composable
+private fun CalcBtn(
     text: String,
     backgroundColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
+    cornerRadius: Dp = 24.dp,
+    fontSize: TextUnit = 24.sp,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .aspectRatio(if (text == "0") 2f else 1f)
-            .height(72.dp),
-        shape = RoundedCornerShape(40.dp),
+        modifier = modifier.height(64.dp),
+        shape = RoundedCornerShape(cornerRadius),
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
             contentColor = contentColor
@@ -207,7 +334,7 @@ fun CalculatorButton(
     ) {
         Text(
             text = text,
-            fontSize = 28.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Medium
         )
     }
