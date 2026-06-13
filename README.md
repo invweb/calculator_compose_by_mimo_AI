@@ -5,7 +5,7 @@ The calculator was created using MiMo AI.
 Xiaomi has released MiMo Code, which is a competitor not only to models, but also to agent systems. Using Visual Studio Code.
 
 https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro
-![Описание картинки](Screenshot_2026-06-13-20-07-19-379_com.example.calculator.jpg)
-https://github.com/invweb/calculator_compose_by_mimo_AI/blob/main/Screenshot_2026-06-13-20-07-19-379_com.example.calculator.jpg
+![0](Screenshot_2026-06-13-20-07-19-379_com.example.calculator.jpg)
+![1](Screenshot_2026-06-13-20-07-19-379_com.example.calculator.jpg)
 
 https://github.com/invweb/calculator_compose_by_mimo_AI/blob/main/Screenshot_2026-06-13-20-07-23-988_com.example.calculator.jpg
