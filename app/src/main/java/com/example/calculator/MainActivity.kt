@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,10 +41,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CalculatorScreen() {
-    var display by remember { mutableStateOf("0") }
-    var firstOperand by remember { mutableDoubleStateOf(0.0) }
-    var operation by remember { mutableStateOf("") }
-    var isNewInput by remember { mutableStateOf(true) }
+    var display by rememberSaveable { mutableStateOf("0") }
+    var firstOperand by rememberSaveable { mutableDoubleStateOf(0.0) }
+    var operation by rememberSaveable { mutableStateOf("") }
+    var isNewInput by rememberSaveable { mutableStateOf(true) }
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
@@ -171,38 +172,38 @@ private fun PortraitCalculator(
                 .weight(1f),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
-            ButtonRow(buttonSpacing) {
-                CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onClear() }
-                CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onPlusMinus() }
-                CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius) { onPercent() }
-                CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("÷") }
+            ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onClear() }
+                CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onPlusMinus() }
+                CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onPercent() }
+                CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onOperation("÷") }
             }
 
-            ButtonRow(buttonSpacing) {
-                CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("7") }
-                CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("8") }
-                CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("9") }
-                CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("×") }
+            ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("7") }
+                CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("8") }
+                CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("9") }
+                CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onOperation("×") }
             }
 
-            ButtonRow(buttonSpacing) {
-                CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("4") }
-                CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("5") }
-                CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("6") }
-                CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("-") }
+            ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("4") }
+                CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("5") }
+                CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("6") }
+                CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onOperation("-") }
             }
 
-            ButtonRow(buttonSpacing) {
-                CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("1") }
-                CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("2") }
-                CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit("3") }
-                CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onOperation("+") }
+            ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("1") }
+                CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("2") }
+                CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit("3") }
+                CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onOperation("+") }
             }
 
-            ButtonRow(buttonSpacing) {
-                CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f), cornerRadius) { onDigit("0") }
-                CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius) { onDigit(".") }
-                CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius) { onEquals() }
+            ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f).fillMaxHeight(), cornerRadius) { onDigit("0") }
+                CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onDigit(".") }
+                CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f).fillMaxHeight(), cornerRadius) { onEquals() }
             }
         }
     }
@@ -219,40 +220,41 @@ private fun LandscapeCalculator(
     onPercent: () -> Unit,
     onPlusMinus: () -> Unit
 ) {
-    val buttonSpacing = 8.dp
-    val cornerRadius = 20.dp
+    val buttonSpacing = 6.dp
+    val cornerRadius = 16.dp
 
     Row(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1C1C1E))
             .systemBarsPadding()
-            .padding(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Column(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = operation.ifEmpty { " " },
                 color = Color.Gray,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 2.dp)
+                    .padding(bottom = 0.dp)
             )
             Text(
                 text = display,
                 color = Color.White,
-                fontSize = 40.sp,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = 4.dp),
                 maxLines = 1
             )
 
@@ -262,52 +264,52 @@ private fun LandscapeCalculator(
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(buttonSpacing)
             ) {
-                ButtonRow(buttonSpacing) {
-                    CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onClear() }
-                    CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onPlusMinus() }
-                    CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 18.sp) { onPercent() }
+                ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                    CalcBtn("AC", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 16.sp) { onClear() }
+                    CalcBtn("±", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 16.sp) { onPlusMinus() }
+                    CalcBtn("%", Color(0xFFA5A5A5), Color.Black, Modifier.weight(1f), cornerRadius, 16.sp) { onPercent() }
                 }
-                ButtonRow(buttonSpacing) {
-                    CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("7") }
-                    CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("8") }
-                    CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("9") }
+                ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                    CalcBtn("7", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("7") }
+                    CalcBtn("8", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("8") }
+                    CalcBtn("9", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("9") }
                 }
-                ButtonRow(buttonSpacing) {
-                    CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("4") }
-                    CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("5") }
-                    CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("6") }
+                ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                    CalcBtn("4", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("4") }
+                    CalcBtn("5", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("5") }
+                    CalcBtn("6", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("6") }
                 }
-                ButtonRow(buttonSpacing) {
-                    CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("1") }
-                    CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("2") }
-                    CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit("3") }
+                ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                    CalcBtn("1", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("1") }
+                    CalcBtn("2", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("2") }
+                    CalcBtn("3", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit("3") }
                 }
-                ButtonRow(buttonSpacing) {
-                    CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f), cornerRadius, 18.sp) { onDigit("0") }
-                    CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 18.sp) { onDigit(".") }
+                ButtonRow(buttonSpacing, Modifier.weight(1f)) {
+                    CalcBtn("0", Color(0xFF333333), Color.White, Modifier.weight(2f), cornerRadius, 16.sp) { onDigit("0") }
+                    CalcBtn(",", Color(0xFF333333), Color.White, Modifier.weight(1f), cornerRadius, 16.sp) { onDigit(".") }
                 }
             }
         }
 
         Column(
             modifier = Modifier
-                .width(72.dp)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .width(56.dp),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
-            CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("÷") }
-            CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("×") }
-            CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("-") }
-            CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onOperation("+") }
-            CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.weight(1f), cornerRadius, 22.sp) { onEquals() }
+            CalcBtn("÷", Color(0xFFFF9500), Color.White, Modifier.fillMaxWidth().weight(1f), cornerRadius, 20.sp) { onOperation("÷") }
+            CalcBtn("×", Color(0xFFFF9500), Color.White, Modifier.fillMaxWidth().weight(1f), cornerRadius, 20.sp) { onOperation("×") }
+            CalcBtn("-", Color(0xFFFF9500), Color.White, Modifier.fillMaxWidth().weight(1f), cornerRadius, 20.sp) { onOperation("-") }
+            CalcBtn("+", Color(0xFFFF9500), Color.White, Modifier.fillMaxWidth().weight(1f), cornerRadius, 20.sp) { onOperation("+") }
+            CalcBtn("=", Color(0xFFFF9500), Color.White, Modifier.fillMaxWidth().weight(1f), cornerRadius, 20.sp) { onEquals() }
         }
     }
 }
 
 @Composable
-private fun ButtonRow(spacing: Dp, content: @Composable RowScope.() -> Unit) {
+private fun ButtonRow(spacing: Dp, modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(spacing),
         content = content
     )
@@ -325,7 +327,7 @@ private fun CalcBtn(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(64.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(cornerRadius),
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
