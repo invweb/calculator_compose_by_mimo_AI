@@ -6,5 +6,7 @@ Xiaomi has released MiMo Code, which is a competitor not only to models, but als
 My sequence of actions: 1) created a project inside Android Studio 2) opened it using Visual Studio Code. An AI system was installed inside before.
 
 https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro
+
+
 ![0](screenshot1.png)
 ![1](screenshot2.png)
